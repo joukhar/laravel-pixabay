@@ -13,7 +13,7 @@ class LaravelPixabay
     protected ?string $key;
     protected string $baseUrl = 'https://pixabay.com/api/';
 
-    protected ?PixabayCategory $category;
+    protected ?PixabayCategory $category = null;
     protected bool $safeSearch = false;
     protected bool $onlyEditorsChoice = false;
     protected int $page = 1;
