@@ -31,7 +31,7 @@ class LaravelPixabay
         }
     }
 
-    public function getImages(?string $id = null, PixabayImageType $type = PixabayImageType::ALL): array
+    public function getImage(?string $id = null, PixabayImageType $type = PixabayImageType::ALL): array
     {
         $response = Http::get($this->baseUrl, $this->getBaseApiOptions([
             'id' => $id,
@@ -45,11 +45,40 @@ class LaravelPixabay
         throw new Exception("Failed to fetch images: " . $response->body());
     }
 
-    public function getVideos(?string $id = null, PixabayVideoType $type = PixabayVideoType::ALL): array
+    public function getImages(?string $query = null, PixabayImageType $type = PixabayImageType::ALL): array
+    {
+        $response = Http::get($this->baseUrl, $this->getBaseApiOptions([
+            'q' => $query,
+            'image_type' => $type->value,
+        ]));
+
+        if ($response->successful()) {
+            return json_decode($response->body(), true);
+        }
+
+        throw new Exception("Failed to fetch images: " . $response->body());
+    }
+
+    public function getVideo(?string $id = null, PixabayVideoType $type = PixabayVideoType::ALL): array
     {
         $endpoint = $this->baseUrl . 'videos';
         $response = Http::get($endpoint, $this->getBaseApiOptions([
             'id' => $id,
+            'video_type' => $type->value,
+        ]));
+
+        if ($response->successful()) {
+            return json_decode($response->body(), true);
+        }
+
+        throw new Exception("Failed to fetch videos: " . $response->body());
+    }
+
+    public function getVideos(?string $query = null, PixabayVideoType $type = PixabayVideoType::ALL): array
+    {
+        $endpoint = $this->baseUrl . 'videos';
+        $response = Http::get($endpoint, $this->getBaseApiOptions([
+            'q' => $query,
             'video_type' => $type->value,
         ]));
 
